@@ -1,0 +1,42 @@
+.signin {
+    display: inline-block;
+    border: 1px solid gray;
+    color: #065fd4;
+    padding: 10px 20px;
+    border-radius: 24px;    
+    font-family: "Roboto","Arial",sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .signin:hover {
+    background-color: #bee0fd;
+    border: 1px solid transparent;
+  }
+  
+  /* Style for when there is only one button (sign out) */
+.signInContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+}
+
+/* Style for when there are multiple buttons (sign in with Google and GitHub) */
+.signInContainerMultiple {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.signin + .signin {
+    margin-top: 10px; /* Adds space between sign-in buttons */
+}
