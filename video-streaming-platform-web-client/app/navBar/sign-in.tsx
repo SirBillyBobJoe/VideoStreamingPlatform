@@ -32,14 +32,14 @@ export default function SignIn({ user }: SignInProps) {
                         Sign Out
                     </button>
                 ) : (
-                    <Fragment>
+                    <div>
                         {
                             showSignInOptions ? (
                                 <button className={styles.signin} onClick={toggleSignInOptions}>
                                     Sign In
                                 </button>
                             ) : (
-                                <Fragment>
+                                <div>
                                     <button className={styles.signin} onClick={() => signInWithProvider('GitHub')}>
                                         Sign In
                                         <span style={{ display: 'flex', alignItems: 'center', marginLeft: '8px' }}>
@@ -52,10 +52,10 @@ export default function SignIn({ user }: SignInProps) {
                                             <Image src="/google.png" alt="Google" width={20} height={20} />
                                         </span>
                                     </button>
-                                </Fragment>
+                                </div>
                             )
                         }
-                    </Fragment>
+                    </div>
                 )
             }
         </div>

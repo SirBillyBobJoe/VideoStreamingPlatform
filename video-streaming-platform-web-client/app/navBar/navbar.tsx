@@ -5,18 +5,19 @@ import Link from "next/link";
 import styles from "./navbar.module.css";
 import SignIn from "./sign-in";
 import { onAuthStateChangedHelper } from "../firebase/firebase";
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "firebase/auth";
+import Upload from "./upload";
 
 export default function Navbar() {
     //init user state
-    const [user,setUser]= useState<User|null>(null);
-    useEffect(()=>{
-        const unsubscribe=onAuthStateChangedHelper((user)=>{
+    const [user, setUser] = useState<User | null>(null);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChangedHelper((user) => {
             setUser(user);
         });
         //cleanup subscription on unmount
-        return()=>unsubscribe();
+        return () => unsubscribe();
     });
 
     return (
@@ -26,7 +27,10 @@ export default function Navbar() {
                     src="/sbbj.png" alt="SBBJ" width={90} height={90}
                 />
             </Link>
-            <SignIn user={user}/>
+            {user && <Upload />}
+            <div>
+                <SignIn user={user} />
+            </div>
         </nav>
     );
 }

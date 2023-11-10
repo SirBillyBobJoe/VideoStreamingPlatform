@@ -8,6 +8,7 @@ import {
     User,
     GithubAuthProvider
 } from "firebase/auth";
+import { getFunctions } from "firebase/functions";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -21,7 +22,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
-
+export const functions = getFunctions();
 /**
  * 
  * @param providerName - type of sign in we do either google, facebook or github
@@ -47,7 +48,7 @@ export function signInWithProvider(providerName: string) {
 /**
  * @returns A promise that resolves when the user is signed out.
  */
-export function signOut(){
+export function signOut() {
     return auth.signOut();
 }
 
@@ -55,6 +56,6 @@ export function signOut(){
  * Triggers a callback when user auth state changes.
  * @returns A function to unsubscribe callback.
  */
-export function onAuthStateChangedHelper(callback:(user:User|null)=>void){
-    return onAuthStateChanged(auth,callback);
+export function onAuthStateChangedHelper(callback: (user: User | null) => void) {
+    return onAuthStateChanged(auth, callback);
 }
