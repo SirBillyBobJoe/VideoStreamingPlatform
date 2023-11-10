@@ -11,7 +11,7 @@ import {
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyBwTDOAI1VNtgXJIZHXuhd23ex9rKC8EBc",
+    apiKey: "AIzaSyDOVXe43WhDFG-uBC9ZA9GoBZR6oAT9cIo",
     authDomain: "video-streaming-platform-d287d.firebaseapp.com",
     projectId: "video-streaming-platform-d287d",
     appId: "1:1037414281747:web:84a30999993a5f824b85e6",
