@@ -12,6 +12,17 @@ const storage = new Storage();
 
 const rawVideoBucketName = "sbbj-platform-raw-videos";
 
+const videoCollectionId = "videos";
+
+export interface Video {
+  id?: string,
+  uid?: string,
+  filename?: string,
+  status?: "processing" | "processed",
+  title?: string,
+  description?: string
+}
+
 export const createUser = functions.auth.user().onCreate((user) => {
   const userInfo = {
     uid: user.uid,
@@ -38,14 +49,77 @@ export const generateUploadUrl = onCall({maxInstances: 1}, async (request) => {
   const bucket = storage.bucket(rawVideoBucketName);
 
   // Generate a unique filename
-  const fileName = `${auth.uid}-${Date.now()}.${data.fileExtension}`;
+  const filename = `${auth.uid}-${Date.now()}.${data.fileExtension}`;
 
   // Get a v4 signed URL for uploading file
-  const [url] = await bucket.file(fileName).getSignedUrl({
+  const [url] = await bucket.file(filename).getSignedUrl({
     version: "v4",
     action: "write",
     expires: Date.now() + 15 * 60 * 1000, // 15 minutes
   });
 
-  return {url, fileName};
+  return {url, filename};
+});
+
+export const getVideos = onCall({maxInstances: 1},
+  async () => {
+    const snapshot = await firestore.
+      collection(videoCollectionId)
+      .limit(10).get();
+    return snapshot.docs.map((doc) => doc.data());
+  });
+
+export const saveVideoData = onCall({maxInstances: 1}, async (request) => {
+  // Check if the user is authenticated
+  if (!request.auth) {
+    throw new functions.https.HttpsError(
+      "failed-precondition",
+      "The function must be called while authenticated."
+    );
+  }
+
+  // Extract video data from the request
+  const {filename, title, description} = request.data;
+  // Save the video data to Firestore
+  const id = filename.split(".")[0];
+  const uid = filename.split("-")[0];
+  await firestore.collection(videoCollectionId).doc(id).set({
+    filename,
+    title,
+    description,
+    id,
+    uid,
+  }, {merge: true});
+
+  return {message: "Video data saved successfully."};
+});
+
+export const getVideoData = onCall({maxInstances: 1}, async (request) => {
+  console.log("index");
+  const filename = request.data;
+  console.log(filename);
+  const file = filename.split(".")[0];
+  console.log(file);
+  const id = file.split("d-")[1];
+  console.log(id);
+
+  if (!id || typeof id !== "string" || id.trim() === "") {
+    throw new Error("Invalid or missing document ID");
+  }
+
+  const documentSnapshot = await firestore
+    .collection(videoCollectionId)
+    .doc(id).get();
+
+  if (!documentSnapshot.exists) {
+    throw new Error("Document not found");
+  }
+  const info = documentSnapshot.data();
+  if (!info) {
+    throw new Error("No Info found");
+  }
+
+  console.log("info ", info);
+  console.log("info.data ", info.data);
+  return info;
 });
