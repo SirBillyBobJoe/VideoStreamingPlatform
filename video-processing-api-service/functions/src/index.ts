@@ -11,7 +11,7 @@ const firestore = new Firestore();
 const storage = new Storage();
 
 const rawVideoBucketName = "sbbj-platform-raw-videos";
-
+const thumbnailBucketName = "sbbj-platform-thumbnails";
 const videoCollectionId = "videos";
 
 export interface Video {
@@ -20,7 +20,8 @@ export interface Video {
   filename?: string,
   status?: "processing" | "processed",
   title?: string,
-  description?: string
+  description?: string,
+  thumbnail?: string
 }
 
 export const createUser = functions.auth.user().onCreate((user) => {
@@ -34,6 +35,33 @@ export const createUser = functions.auth.user().onCreate((user) => {
   logger.info(`User Created: ${JSON.stringify(userInfo)}`);
   return;
 });
+
+export const generateThumbnailUrl =
+  onCall({maxInstances: 1}, async (request) => {
+    console.log("start generate thumbnail url");
+    // Check if the user is authentication
+    if (!request.auth) {
+      throw new functions.https.HttpsError(
+        "failed-precondition",
+        "The function must be called while authenticated."
+      );
+    }
+
+    const auth = request.auth;
+    const data = request.data;
+    const bucket = storage.bucket(thumbnailBucketName);
+    const filename = `${auth.uid}-${Date.now()}.${data.fileExtension}`;
+    // Get a v4 signed URL for uploading file
+    const [url] = await bucket.file(filename).getSignedUrl({
+      version: "v4",
+      action: "write",
+      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+    });
+    console.log("generated url successfully");
+    console.log(`url: ${url}`);
+    console.log(`filename: ${filename}`);
+    return {url, filename};
+  });
 
 export const generateUploadUrl = onCall({maxInstances: 1}, async (request) => {
   // Check if the user is authentication
@@ -58,6 +86,9 @@ export const generateUploadUrl = onCall({maxInstances: 1}, async (request) => {
     expires: Date.now() + 15 * 60 * 1000, // 15 minutes
   });
 
+  console.log("generated url successfully");
+  console.log(`url: ${url}`);
+  console.log(`filename: ${filename}`);
   return {url, filename};
 });
 
@@ -89,9 +120,29 @@ export const saveVideoData = onCall({maxInstances: 1}, async (request) => {
     description,
     id,
     uid,
+    thumbnail: "",
   }, {merge: true});
 
   return {message: "Video data saved successfully."};
+});
+
+export const saveThumbnail = onCall({maxInstances: 1}, async (request) => {
+  console.log("start save thumbnail");
+  // Check if the user is authenticated
+  if (!request.auth) {
+    throw new functions.https.HttpsError(
+      "failed-precondition",
+      "The function must be called while authenticated."
+    );
+  }
+  const {thumbnail, id} = request.data;
+  console.log(id);
+  console.log(thumbnail);
+  await firestore.collection(videoCollectionId).doc(id).set({
+    thumbnail,
+  }, {merge: true});
+  console.log("Thumbnail saved successfully.");
+  return {message: "Thumbnail saved successfully."};
 });
 
 export const getVideoData = onCall({maxInstances: 1}, async (request) => {

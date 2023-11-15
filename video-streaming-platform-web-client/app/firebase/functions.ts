@@ -4,6 +4,11 @@ import { functions } from './firebase';
 
 const generateUploadUrl = httpsCallable(functions, 'generateUploadUrl');
 const getVideosFunction = httpsCallable(functions, 'getVideos');
+const saveVideoData = httpsCallable(functions, 'saveVideoData');
+const getVideoDataFunction = httpsCallable(functions, 'getVideoData');
+const generateThumbnailUrl = httpsCallable(functions, 'generateThumbnailUrl');
+const saveThumbnail= httpsCallable(functions, 'saveThumbnail');
+
 
 export interface Video {
     id?: string,
@@ -12,9 +17,10 @@ export interface Video {
     status?: 'processing' | 'processed',
     title?: string,
     description?: string
+    thumbnail?: string
 }
 
-export async function uploadVideo(file: File) {
+export async function uploadVideo(file: File, title: String, description: String, image: File | null) {
     const response: any = await generateUploadUrl({
         fileExtension: file.name.split('.').pop()
     });
@@ -27,6 +33,42 @@ export async function uploadVideo(file: File) {
             'Content-Type': file.type
         }
     });
+    console.log("video type: ",file.type)
+    if (uploadResult.ok) {
+        await saveVideoData({
+            filename: response?.data?.filename,
+            title,
+            description
+        })
+    }
+
+    //upload image if theres an image
+    if (image != null) {
+        const thumbnailResponse: any = await generateThumbnailUrl({
+            fileExtension: image.name.split('.').pop()
+        });
+
+        console.log(thumbnailResponse?.data?.url)
+        console.log("image type: ",image.type)
+        //upload via the signed url
+        const uploadImage = await fetch(thumbnailResponse?.data?.url, {
+            method: 'Put',
+            body: image,
+            headers: {
+                'Content-Type': image.type,
+            }
+        });
+
+
+        if (uploadImage.ok) {
+            const id=response?.data?.filename.split(".")[0];
+            await saveThumbnail({
+                thumbnail: thumbnailResponse?.data?.filename,
+                id
+            })
+        }
+    }
+
     return uploadResult;
 }
 
@@ -36,6 +78,17 @@ export async function getVideos() {
 
     // Filter to get only processed videos
     const processedVideos = allVideos.filter(video => video.status === 'processed');
-    
+
     return processedVideos;
 }
+
+export async function getVideoData(filename: String) {
+    console.log("functions start");
+    const response = await getVideoDataFunction(filename);
+    console.log("functions finished");
+    console.log("response", response);
+    console.log("response.data", response.data);
+
+    return response.data as Video;
+}
+

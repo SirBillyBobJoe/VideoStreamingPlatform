@@ -10,9 +10,11 @@ const storage = new Storage();
 
 const rawVideoBucketName = "sbbj-platform-raw-videos";
 const processedVideoBucketName = "sbbj-platform-processed-videos";
+const thumbnailBucketName="sbbj-platform-thumbnails"
 
 const localRawVideoPath = "./raw-videos";
 const localProcessedVideoPath = "./processed-videos";
+
 
 /**
  * Creates the local directories for raw and processed videos.
@@ -127,4 +129,10 @@ function ensureDirectoryExistence(dirPath: string) {
         fs.mkdirSync(dirPath, { recursive: true }); //recurseive true enables creating nested directory
         console.log(`created directry at ${dirPath}.`)
     }
+}
+
+export async function makeThumbnailPublic(thumbnail:string){
+    const bucket=storage.bucket(thumbnailBucketName);
+    await bucket.file(thumbnail).makePublic();
+    console.log("Made thumbnail public")
 }

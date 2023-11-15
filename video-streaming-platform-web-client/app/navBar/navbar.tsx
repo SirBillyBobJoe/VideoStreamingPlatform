@@ -20,13 +20,16 @@ export default function Navbar() {
         return () => unsubscribe();
     });
 
+    const handleRefresh = () => {
+        window.location.href = '/';
+    }
+
     return (
         <nav className={styles.nav}>
-            <Link href="/">
-                <Image
-                    src="/sbbj.png" alt="SBBJ" width={90} height={90}
-                />
-            </Link>
+            <Image className={styles.home}
+                src="/sbbj.png" alt="SBBJ" width={90} height={90} onClick={handleRefresh}
+            />
+
             {user && <Upload />}
             <div>
                 <SignIn user={user} />

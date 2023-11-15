@@ -5,15 +5,18 @@ import Image from 'next/image';
 
 export default async function Home() {
   const videos = await getVideos();
+  const imagePrefix = 'https://storage.googleapis.com/sbbj-platform-thumbnails/';
 
+  
 
   return (
-    <main>
+    <main className={styles.videosContainer}>
     {
       videos.map((video) => (
-        <Link href={`/watch?v=${video.filename}`} key={video.id}>
-          <Image src={'/thumbnail.png'} alt='video' width={480} height={360}
+        <Link href={`/watch?v=${video.filename}`} key={video.id} >
+          <img src={imagePrefix + video.thumbnail} alt='video' width={480} height={360}
             className={styles.thumbnail}/>
+            <div className={styles.title}>{video.title}</div>
         </Link>
       ))
     }
