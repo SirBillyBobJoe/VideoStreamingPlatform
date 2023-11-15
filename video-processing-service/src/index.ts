@@ -1,6 +1,6 @@
 import express from 'express';
 import { convertVideo, deleteProcessedVideo, deleteRawVideo, downloadRawVideo, uploadProcessedVideo } from './storage';
-import { setupDirectories,makeThumbnailPublic } from './storage';
+import { setupDirectories, makeThumbnailPublic } from './storage';
 import { getThumbnail, isVideoNew, setVideo } from "./firestore";
 
 setupDirectories();
@@ -62,10 +62,12 @@ app.post('/process-video', async (req, res) => {
     status: 'processed',
     filename: outputFileName
   });
-  
-  const thumbnail:string=await getThumbnail(videoId)
-  makeThumbnailPublic(thumbnail);
-  
+
+  const thumbnail: string = await getThumbnail(videoId)
+  if (thumbnail != "") {
+    makeThumbnailPublic(thumbnail);
+  }
+
   deleteVideos(outputFileName, inputFileName);
 
   return res.status(200).send('Processing completed successfully');
