@@ -8,8 +8,8 @@ const saveVideoData = httpsCallable(functions, 'saveVideoData');
 const getVideoDataFunction = httpsCallable(functions, 'getVideoData');
 const generateThumbnailUrl = httpsCallable(functions, 'generateThumbnailUrl');
 const saveThumbnail= httpsCallable(functions, 'saveThumbnail');
-
-
+const getSearchFunction= httpsCallable(functions, 'getSearch');
+const getPFPFunction= httpsCallable(functions, 'getPFP');
 export interface Video {
     id?: string,
     uid?: string,
@@ -19,6 +19,13 @@ export interface Video {
     description?: string
     thumbnail?: string
 }
+
+export interface userInfo {
+    uid?: string,
+    email?: string,
+    photoUrl?: string,
+    name?: string,
+};
 
 export async function uploadVideo(file: File, title: String, description: String, image: File | null) {
     const response: any = await generateUploadUrl({
@@ -81,14 +88,30 @@ export async function getVideos() {
 
     return processedVideos;
 }
+export async function getSearch(key:string) {
+    console.log("key ", key)
+    const response = await getSearchFunction(key);
+    const allVideos = response.data as Video[];
+
+    const processedVideos = allVideos.filter(video => video.status === 'processed');
+
+    return processedVideos;
+}
 
 export async function getVideoData(filename: String) {
     console.log("functions start");
     const response = await getVideoDataFunction(filename);
     console.log("functions finished");
     console.log("response", response);
-    console.log("response.data", response.data);
+    console.log("response.data getVideoData", response.data);
 
     return response.data as Video;
 }
 
+export async function getPFP(uid:String){
+    console.log("getPFP functions start");
+    console.log("uid: ",uid)
+    const response = await getPFPFunction(uid);
+    console.log("response.data getPFP", response.data)
+    return response.data as userInfo;
+}

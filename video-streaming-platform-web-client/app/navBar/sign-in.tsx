@@ -1,6 +1,5 @@
 'use client';
 
-import { Fragment } from "react";
 import styles from './sign-in.module.css'
 import { signInWithProvider, signOut } from "../firebase/firebase";
 import { User } from "firebase/auth";

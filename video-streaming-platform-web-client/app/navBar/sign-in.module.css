@@ -11,13 +11,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
   .signin:hover {
     background-color: #bee0fd;
     border: 1px solid transparent;
+    transform: scale(1.03); /* Slightly enlarge on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+
   }
-  
+
+
   /* Style for when there is only one button (sign out) */
 .signInContainer {
     position: absolute;

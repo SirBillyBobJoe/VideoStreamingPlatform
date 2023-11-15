@@ -13,6 +13,7 @@ const storage = new Storage();
 const rawVideoBucketName = "sbbj-platform-raw-videos";
 const thumbnailBucketName = "sbbj-platform-thumbnails";
 const videoCollectionId = "videos";
+const userCollection="users";
 
 export interface Video {
   id?: string,
@@ -25,10 +26,18 @@ export interface Video {
 }
 
 export const createUser = functions.auth.user().onCreate((user) => {
+  let name="";
+  if (user.displayName==null) {
+    name="Guest"+Date.now();
+  } else {
+    name=user.displayName;
+  }
+
   const userInfo = {
     uid: user.uid,
     email: user.email,
     photoUrl: user.photoURL,
+    name,
   };
 
   firestore.collection("users").doc(user.uid).set(userInfo);
@@ -91,14 +100,6 @@ export const generateUploadUrl = onCall({maxInstances: 1}, async (request) => {
   console.log(`filename: ${filename}`);
   return {url, filename};
 });
-
-export const getVideos = onCall({maxInstances: 1},
-  async () => {
-    const snapshot = await firestore.
-      collection(videoCollectionId)
-      .limit(10).get();
-    return snapshot.docs.map((doc) => doc.data());
-  });
 
 export const saveVideoData = onCall({maxInstances: 1}, async (request) => {
   // Check if the user is authenticated
@@ -174,3 +175,56 @@ export const getVideoData = onCall({maxInstances: 1}, async (request) => {
   console.log("info.data ", info.data);
   return info;
 });
+
+export const getVideos = onCall({maxInstances: 1},
+  async () => {
+    const snapshot = await firestore
+      .collection(videoCollectionId)
+      .where("status", "==", "processed")
+      // Filter for documents where status is 'processed'
+      .limit(10) // Limit to 10 documents
+      .get();
+
+    return snapshot.docs.map((doc) => doc.data());
+  });
+
+export const getSearch = onCall({maxInstances: 1},
+  async (request) => {
+    console.log("started search");
+    console.log("request.data: ", request.data);
+    const key = request.data;
+    console.log("key ", key);
+    const snapshot = await firestore
+      .collection(videoCollectionId)
+      .where("title", "==", key)
+      .where("status", "==", "processed")
+      // Filter for documents where status is 'processed'
+      .limit(10) // Limit to 10 documents
+      .get();
+    console.log("ended search");
+    console.log(snapshot.docs.map((doc) => doc.data()));
+    return snapshot.docs.map((doc) => doc.data());
+  });
+
+export const getPFP = onCall({maxInstances: 1},
+  async (request) => {
+    console.log("start function");
+    const uid = request.data;
+    console.log(uid);
+
+    const documentSnapshot = await firestore
+      .collection(userCollection)
+      .doc(uid).get();
+
+    if (!documentSnapshot.exists) {
+      throw new Error("Document not found");
+    }
+    const info = documentSnapshot.data();
+    if (!info) {
+      throw new Error("No Info found");
+    }
+
+    console.log("info ", info);
+    console.log("info.photoUrl ", info.photoUrl);
+    return info;
+  });
