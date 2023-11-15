@@ -5,3 +5,4 @@ Test out the site at [VideoStreamingPlatform](https://video-streaming-platform-w
 
 ![Main Interface](images/image1.png)
 ![Main Interface](images/image2.png)
+![Main Interface](images/image3.png)
