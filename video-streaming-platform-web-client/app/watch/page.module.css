@@ -1,13 +1,80 @@
-/* page.module.css */
+
+.entireContainer{
+    padding: 3%;
+    justify-content: center;
+    display: flex;
+}
 .container {
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
     align-items: start;
     max-width: 1000px;
-    margin: 0 auto;
     padding: 20px;
     background-color: #f0f4f8; /* Light grey background for modern look */
+    margin-right:50px;
+    height: 10%;
+    border-radius: 20px;
+}
+.moreVideosContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.moreVideosContainer a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.moreVideos{
+    background-color: #f0f4f8; /* Light grey background for modern look */
+    width: 500px;
+    display: flex;
+    margin: 15px;
+    padding: 15px;
+    border-radius: 20px;
+    transition: ease all 0.3s;
+}
+
+.moreVideos:hover{
+    transform: scale(1.03);
+}
+
+.vidInfo{
+    padding:20px;
+    font-weight: 800;
+}
+
+.vidInfoProfile{
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    transition: ease all 0.3s;
+}
+
+.vidInfoProfile:hover{
+    transform: scale(1.03);
+}
+
+.vidInfoPic{
+    margin: 10px;
+    border-radius: 50%; /* Circular shape */
+    width: 50px;
+    height: 50px;
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+
+.thumbnail {
+    margin: 10px;
+    border: 1px solid #ddd; /* Light grey border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    border-radius: 10px; /* Rounded corners */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+    background-color: #f7f7f7;
+    width: 240px;  
+    height: 180px;
+    object-fit: cover;
 }
 
 .card {
@@ -42,7 +109,16 @@
     align-items: center; /* Aligns the image and text vertically */
     gap: 10px; /* Adds space between image and username */
     margin-bottom: 15px; /* Space below the user info */
+    text-decoration: none;
+    color: inherit; 
+    transition: ease all 0.3s;
 }
+
+.userInfo:hover {
+    transform: scale(1.01);
+
+}
+
 
 .profilePic {
     border-radius: 50%; /* Circular shape */
@@ -57,3 +133,4 @@
     color: #333333; /* Darker color for better contrast */
     font-weight: 500; /* Medium font weight for better visibility */
 }
+

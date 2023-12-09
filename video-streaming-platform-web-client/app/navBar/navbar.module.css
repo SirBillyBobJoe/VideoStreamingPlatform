@@ -1,11 +1,18 @@
-.nav{
+.nav {
     display: flex;
     justify-content: space-between;
-    align-items:center;
-    padding:1em;
+    align-items: center;
+    padding: 1em;
+    background-color: #FAFAFA; /* Slightly off-white background for a softer contrast */
+    border-bottom: 1px solid #E0E0E0; /* Light grey border for subtle separation */
 }
 
 .home{
     cursor: pointer;
+    transition: ease all 0.3s;
+}
+
+.home:hover{
+    transform: scale(1.05);
 }
 
