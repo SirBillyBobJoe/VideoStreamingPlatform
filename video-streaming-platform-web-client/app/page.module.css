@@ -1,25 +1,26 @@
 /* Thumbnail Styling */
 .thumbnail {
     margin: 10px;
-    border: 1px solid #ddd; /* Light grey border */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    border-radius: 10px; /* Rounded corners */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+    border: 1px solid #ddd;
+    /* Light grey border */
+    border-radius: 10px;
+    /* Rounded corners */
     background-color: #f7f7f7;
+    width: 480px;
+    height: 360px;
+    object-fit: cover;
 }
 
-.thumbnail:hover {
-    transform: scale(1.03); /* Slightly enlarge on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
-}
 
 /* Videos Container */
 .videosContainer {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    justify-content: center; /* Center items */
-    padding: 20px; /* Add padding */
+    justify-content: center;
+    /* Center items */
+    padding: 20px;
+    /* Add padding */
 }
 
 /* Title Styling */
@@ -30,32 +31,133 @@
     font-size: 1rem;
     font-weight: bold;
     margin-top: 8px;
-    padding: 6px 10px; /* Increase padding */
+    padding: 6px 10px;
+    /* Increase padding */
     background-color: #f0f0f0;
-    border-radius: 6px; /* Rounded corners for title */
+    border-radius: 6px;
+    /* Rounded corners for title */
     max-width: 480px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
 }
-.title:hover {
-    transform: scale(1.03); /* Slightly enlarge on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
-}
+
 
 /* Link Styling */
 .videosContainer a {
     text-decoration: none;
-    color: inherit; /* Ensure link color matches the text color */
+    color: inherit;
+    /* Ensure link color matches the text color */
+}
+
+.paginate {
+    width: 100px;
+    margin-top: 50px;
+    margin-left: 30px;
+    border-radius: 20px;
+    height: 40px;
+    border: 1px solid gray;
+    color: #065fd4;
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-family: "Roboto", "Arial", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color ease 1s;
+}
+
+.paginate:hover {
+    background-color: #bee0fd;
+    border: 1px solid transparent;
+    transform: scale(1.03);
+    /* Slightly enlarge on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    /* Stronger shadow on hover */
+
+}
+
+.disabled {
+    width: 100px;
+    margin-top: 50px;
+    margin-left: 30px;
+    border-radius: 20px;
+    height: 40px;
+    border: 1px solid gray;
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-family: "Roboto", "Arial", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.video {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    border: 1px solid #ddd;
+    /* Light grey border */
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    /* Rounded corners */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Smooth transition for hover effect */
+    background-color: #f7f7f7;
+    width: 550px;
+    height: 480px;
+    object-fit: cover;
+    transition: ease all 0.3s;
+}
+
+.video:hover {
+    transform: scale(1.03);
+    /* Slightly enlarge on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    /* Stronger shadow on hover */
+}
+
+.vidInfoPic {
+    margin: 10px;
+    border-radius: 50%;
+    /* Circular shape */
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    /* Ensures the image covers the area without distortion */
+}
+
+.vidInfoProfile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: ease all 0.3s;
+}
+
+.vidInfoProfile:hover {
+    transform: scale(1.03);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .thumbnail {
-        width: 100%; /* Full width on smaller screens */
-        max-width: 360px; /* Limit maximum width */
+        width: 100%;
+        /* Full width on smaller screens */
+        max-width: 360px;
+        /* Limit maximum width */
     }
 
     .title {
-        max-width: 360px; /* Limit maximum width */
+        max-width: 360px;
+        /* Limit maximum width */
     }
 }

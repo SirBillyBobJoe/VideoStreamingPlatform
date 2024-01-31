@@ -22,9 +22,16 @@ export interface Video {
   status?: "processing" | "processed",
   title?: string,
   description?: string,
-  thumbnail?: string
+  thumbnail?: string,
+  name?: string,
+  photoUrl?:string,
 }
-
+export interface userInfo {
+  uid: string,
+  email: string,
+  photoUrl: string,
+  name: string,
+}
 export const createUser = functions.auth.user().onCreate((user) => {
   let name="";
   if (user.displayName==null) {
@@ -109,12 +116,12 @@ export const saveVideoData = onCall({maxInstances: 1}, async (request) => {
       "The function must be called while authenticated."
     );
   }
-
   // Extract video data from the request
   const {filename, title, description} = request.data;
   // Save the video data to Firestore
   const id = filename.split(".")[0];
   const uid = filename.split("-")[0];
+  const info= await getPFPHelper(uid) as userInfo;
   await firestore.collection(videoCollectionId).doc(id).set({
     filename,
     title,
@@ -122,6 +129,8 @@ export const saveVideoData = onCall({maxInstances: 1}, async (request) => {
     id,
     uid,
     thumbnail: "",
+    username: info.name,
+    photoUrl: info.photoUrl,
   }, {merge: true});
 
   return {message: "Video data saved successfully."};
@@ -176,18 +185,6 @@ export const getVideoData = onCall({maxInstances: 1}, async (request) => {
   return info;
 });
 
-export const getVideos = onCall({maxInstances: 1},
-  async () => {
-    const snapshot = await firestore
-      .collection(videoCollectionId)
-      .where("status", "==", "processed")
-      // Filter for documents where status is 'processed'
-      .limit(10) // Limit to 10 documents
-      .get();
-
-    return snapshot.docs.map((doc) => doc.data());
-  });
-
 export const getSearch = onCall({maxInstances: 1},
   async (request) => {
     console.log("started search");
@@ -210,21 +207,27 @@ export const getPFP = onCall({maxInstances: 1},
   async (request) => {
     console.log("start function");
     const uid = request.data;
-    console.log(uid);
 
-    const documentSnapshot = await firestore
-      .collection(userCollection)
-      .doc(uid).get();
-
-    if (!documentSnapshot.exists) {
-      throw new Error("Document not found");
-    }
-    const info = documentSnapshot.data();
-    if (!info) {
-      throw new Error("No Info found");
-    }
-
-    console.log("info ", info);
-    console.log("info.photoUrl ", info.photoUrl);
-    return info;
+    return getPFPHelper(uid);
   });
+
+/**
+ * Used to help get profile picture (pfp).
+ * @param {string} uid - The user ID.
+ */
+async function getPFPHelper(uid: string) {
+  const documentSnapshot = await firestore
+    .collection(userCollection)
+    .doc(uid).get();
+
+  if (!documentSnapshot.exists) {
+    throw new Error("Document not found");
+  }
+  const info = documentSnapshot.data();
+  if (!info) {
+    throw new Error("No Info found");
+  }
+
+
+  return info as userInfo;
+}

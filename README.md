@@ -6,7 +6,7 @@ This is a learning project where I've developed a basic video streaming platform
 - Basic video streaming capabilities
 - Simple user interface
 
-Feel free to check out the project and explore its features: [VideoStreamingPlatform](https://video-streaming-platform-web-client-jg5qmt6o5a-uc.a.run.app)
+Feel free to check out the project and explore its features: [VideoStreamingPlatform](https://video-streaming-platform.hoseatongho.com)
 
 **Screenshots:**
 Here are some screenshots demonstrating the platform's interface:
