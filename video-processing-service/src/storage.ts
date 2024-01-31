@@ -10,7 +10,7 @@ const storage = new Storage();
 
 const rawVideoBucketName = "sbbj-platform-raw-videos";
 const processedVideoBucketName = "sbbj-platform-processed-videos";
-const thumbnailBucketName="sbbj-platform-thumbnails"
+const thumbnailBucketName = "sbbj-platform-thumbnails"
 
 const localRawVideoPath = "./raw-videos";
 const localProcessedVideoPath = "./processed-videos";
@@ -30,7 +30,7 @@ export function setupDirectories() {
  * @param processedVideoname - The name of the file to convert to {@link localProcessedVideoPath}.
  * @returns A promise that resolves when the video has been converted.
  */
-export function convertVideo(rawVideoName: string, processedVideoName: string) {
+export function convertVideo360p(rawVideoName: string, processedVideoName: string) {
     return new Promise<void>((resolve, reject) => {
         // Create the ffmpeg command
         ffmpeg(`${localRawVideoPath}/${rawVideoName}`)
@@ -45,7 +45,23 @@ export function convertVideo(rawVideoName: string, processedVideoName: string) {
             })
             .save(`${localProcessedVideoPath}/${processedVideoName}`);
     })
+}
 
+export function convertVideo720p(rawVideoName: string, processedVideoName: string) {
+    return new Promise<void>((resolve, reject) => {
+        // Create the ffmpeg command
+        ffmpeg(`${localRawVideoPath}/${rawVideoName}`)
+            .outputOptions('-vf', 'scale=-1:720') // 720p
+            .on('end', function () {
+                console.log('Processing finished successfully');
+                resolve();
+            })
+            .on('error', function (err: any) {
+                console.log('An error occurred: ' + err.message);
+                reject(err);
+            })
+            .save(`${localProcessedVideoPath}/${processedVideoName}`);
+    })
 }
 
 /**
@@ -131,8 +147,8 @@ function ensureDirectoryExistence(dirPath: string) {
     }
 }
 
-export async function makeThumbnailPublic(thumbnail:string){
-    const bucket=storage.bucket(thumbnailBucketName);
+export async function makeThumbnailPublic(thumbnail: string) {
+    const bucket = storage.bucket(thumbnailBucketName);
     await bucket.file(thumbnail).makePublic();
     console.log("Made thumbnail public")
 }
