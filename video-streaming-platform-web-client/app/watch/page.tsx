@@ -12,6 +12,7 @@ export interface Video {
     id?: string,
     uid?: string,
     filename?: string,
+    res720?: string,
     status?: "processing" | "processed",
     title?: string,
     description?: string
@@ -36,6 +37,9 @@ export default function Watch() {
     const [pfp, setPFP] = useState('');
     const [username, setUserName] = useState('');
     const [videos, setVideos] = useState<Video[]>([]);
+    const [res360, setRes360] = useState<string>("");
+    const [res720, setRes720] = useState<string>("");
+    const [is360, setIs360] = useState<boolean>(true);
 
     const videoSrc = useSearchParams().get('v');
     const uid = useSearchParams().get('uid');
@@ -67,6 +71,20 @@ export default function Watch() {
                 if (videoData && videoData.description) {
                     setVideoDescription(videoData.description)
                 }
+
+                if (videoData && videoData.filename) {
+                    setRes360(videoData.filename)
+                }else{
+                    setRes360("")
+                    setIs360(false)
+                }
+
+                if (videoData && videoData.res720) {
+                    setRes720(videoData.res720)
+                }else{
+                    setRes720("")
+                    setIs360(true)
+                }
             }
         }
         getData();
@@ -89,14 +107,25 @@ export default function Watch() {
         getImage();
     }, [uid]);
 
+    const handle360 = () => {
+        setIs360(true)
+    }
+    const handle720 = () => {
+        setIs360(false)
+    }
 
     const videoPrefix = 'https://storage.googleapis.com/sbbj-platform-processed-videos/';
+
 
     return (
         <div className={styles.entireContainer}>
             <div className={styles.container}>
                 <div className={styles.card}>
-                    <video controls src={videoPrefix + videoSrc} className={styles.video} />
+                    <video controls src={is360 ? videoPrefix + videoSrc : videoPrefix + res720} className={styles.video} />
+                    <div className={styles.resolutionContainer}>
+                        {res360 && <button className={is360 ? styles.resolutionChose : styles.resolution} onClick={handle360}>360p</button>}
+                        {res720 && <button className={is360 ? styles.resolution : styles.resolutionChose} onClick={handle720}>720p</button>}
+                    </div>
                 </div>
                 <div className={styles.card}>
                     <h2>{videoTitle}</h2>

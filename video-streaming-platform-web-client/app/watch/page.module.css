@@ -134,3 +134,30 @@
     font-weight: 500; /* Medium font weight for better visibility */
 }
 
+.resolution,.resolutionChose{
+    width: 10%;
+    padding: 1%;
+    border-radius: 20px;
+    font-weight: 900;
+    margin: 10px;
+    color: #065fd4;
+    cursor: pointer;
+    transition: ease all 0.5s;
+    border: 1px solid gray;
+}
+
+.resolution:hover,.resolutionChose:hover{
+    transform: scale(1.05);
+    background-color: #bee0fd;
+}
+
+.resolutionChose{
+    background-color: #bee0fd;
+}
+
+
+
+.resolutionContainer{
+    display: flex;
+}
+
